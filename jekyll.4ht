@@ -1,4 +1,4 @@
-\usepackage[english]{isodate}
+%\usepackage[english]{isodate}
 \NewConfigure{AbstractPar}{2}
 \Configure{AbstractPar}{\Tg<p>}{\Tg</p>}
 \renewcommand\GetAbstract{%
