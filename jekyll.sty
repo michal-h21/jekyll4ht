@@ -5,6 +5,15 @@
 % resulting in invalid yaml header
 \textwidth=1000em
 
+\newcommand\jekyll@printstring[2]{%
+#1: #2\\%
+}
+
+\newcommand\jekyll@printarray[2]{%
+#1: |\\%
+  #2
+}
+
 %\newtoks\yamltoks
 \gdef\yamltoks{}
 \newcommand\AddToHeader[1]{%
@@ -13,28 +22,43 @@
 \newcommand\SetLayout[1]{%
 \gdef\jekyll@layout{#1}
 }
+
+\gdef\LayoutString{layout}
 \newcommand\GetLayout{%
-layout: \jekyll@layout\\%
+%layout: \jekyll@layout\\%
+\jekyll@printstring\LayoutString\jekyll@layout
 }
+
+\gdef\TitleString{title}
 \newcommand\GetTitle{%
-title: \@title\\%
+%title: \@title\\%
+\jekyll@printstring{title}\@title
 }
+
+\gdef\LanguageString{language}
 \newcommand\GetLanguage{%
 \ifx\bbl@main@language\@undefined 
 \else
-language: \bbl@main@language\\%
+%language: \bbl@main@language\\%
+\jekyll@printstring\LanguageString\bbl@main@language
 }
+
+\gdef\StyleString{style}
 \newcommand\GetStyle{%
-style: \jobname.css\\%
+%style: \jobname.css\\%
+\jekyll@printstring\StyleString{\jobname.css}%
 }
 \newtoks\my@Abstract
 \newcommand\Abstract[1]{\my@Abstract{#1}}
+
+\gdef\AbstractString{abstract}
 \newcommand\GetAbstract{%
 %\def\@myempty{}
 %\ifx\@Abstract\@empty
 %\else
-abstract: |\\
-  \the\my@Abstract 
+%abstract: |\\
+%  \the\my@Abstract 
+\jekyl@printarray\AbstractString{\the\my@abstract}
 %\fi
 }
 \SetLayout{post}
