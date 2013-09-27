@@ -1,0 +1,21 @@
+#!/usr/bin/env texlua
+kpse.set_program_name "luatex"
+local make4ht  = require "make4ht-lib"
+local mkparams = require "mkparams"
+local commands = require "jekyll-commands"
+local config   = require "jekyll-config"
+local options  = {}
+options.progname = "jekyll4ht"
+options.postparams = [[
+<command> (string)
+possible commands:
+  new - create new post
+]]
+local args = mkparams.get_args(options)
+for k,v in pairs(args) do
+	if type(v) == "string" then v = v else v = type(v) end
+	print (k..": "..v)
+end
+print(commands.get_commands()) 
+print(commands.find_command(arg))
+print(config.find_config())
