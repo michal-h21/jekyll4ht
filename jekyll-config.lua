@@ -1,5 +1,6 @@
 local m = {}
-local mkutils = "mkutils"
+local mkutils = require "mkutils"
+local lip = require "lip"
 function file_exists(name)
 	local f=io.open(name,"r")
 	if f~=nil then io.close(f) return true else return false end
@@ -18,5 +19,23 @@ local find_config = function()
 	end
 	return false
 end
+
+--[[
+local function load_config(filename, default)
+	local default = default or {}
+	if ~file_exists(filename) then 
+		return nil, "Cannot load config file "..filename 
+	end
+	local section = "default"
+	local file  = io.open(filename,  "r")
+	if ~file then return nil, "Error opening config file"..filename end
+	for line in file:lines() do
+		local ts = line:match("")
+	end
+	file:close()
+end
+--]]
+
 m.find_config = find_config
+m.load_config = lip.load
 return m

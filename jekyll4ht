@@ -18,4 +18,6 @@ for k,v in pairs(args) do
 end
 print(commands.get_commands()) 
 print(commands.find_command(arg))
-print(config.find_config())
+local cfg = config.find_config()
+print(cfg)
+local k = config.load_config(cfg)
