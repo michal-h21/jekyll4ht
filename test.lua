@@ -1,0 +1,1 @@
+dofile("tests/test.lua")
