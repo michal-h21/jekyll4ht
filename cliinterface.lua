@@ -27,7 +27,7 @@ local make_cmd = function(parent, name)
 		end
 	}
 	print("Make command: "..name)
-	print("Parrent: "..parent.name)
+	print("Parent: "..parent.name)
 	m.__index = m
 	return setmetatable({},m)
 end
@@ -70,6 +70,7 @@ local make_app = function(name)
 			if name then
 			  print("Příkaz: "..name)
 				local fn = command.func
+				fn(self, args)
 			else
 				print(self:help())
 			end
@@ -80,7 +81,7 @@ local make_app = function(name)
 		function(self, args)
 			local parent = self.parent
 			local name = self.name
-			print(parent:help(name))
+			print(self:help(name))
 		end
 	)
 	return setmetatable({},m)
