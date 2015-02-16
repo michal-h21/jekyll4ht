@@ -101,3 +101,5 @@ j:command "nazdar":aliases{"jej"}
 	print("Nazdar")
 end)
 j:run(arg)
+
+return make_app
