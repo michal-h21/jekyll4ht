@@ -36,6 +36,7 @@ abstract: \HChar{124}\HCode{\Hnewline}%
 \HCode{---}\\
 \HtmlParOn
 \egroup}{%
+\EndP
 % copied from html4.4ht
 \:CheckOption{fn-in} \if:Option
 \ifvmode \IgnorePar\fi\EndP
