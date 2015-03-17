@@ -1,53 +1,77 @@
-%\usepackage[english]{isodate}
-\NewConfigure{AbstractPar}{2}
-\Configure{AbstractPar}{\Tg<p>}{\Tg</p>}
-\renewcommand\GetAbstract{%
-\bgroup%
-\def\twospace{\HChar{32}\HChar{32}}%
-\let\oldpar\par%
-\def\par{%
-\b:AbstractPar%
-%\oldpar%
-\HCode{\Hnewline}\twospace%
-\a:AbstractPar%
-}%
-\IgnorePar
-abstract: \HChar{124}\HCode{\Hnewline}%
-\twospace\a:AbstractPar\the\my@Abstract\b:AbstractPar%
-\egroup%
+\RequirePackage{rfclanguages}
+\RequirePackage{etoolbox}
+
+% headmatter delimiters
+\NewConfigure{headmatter}{2}
+\Configure{headmatter}{\HCode{---\Hnewline}}{\HCode{---\Hnewline}}
+
+% declare headmatter property
+% #1 name, #2 function to print it #3 function to get it
+\NewConfigure{JekyllDeclare}[3]{%
+	\csgdef{jekyll:dec:#1}{#2{#1}{#3}}%
 }
+
+% declare which properties should be used
+\NewConfigure{HeadmatterProperties}{1}
+
+% process list of properties and print them in the headmatter
+\def\jekyll:headmatter:properties{%
+	\def\do##1{\typeout{uzivame: ##1}\csuse{jekyll:dec:##1}}%
+	\expandafter\docsvlist\expandafter{\a:HeadmatterProperties}%
+}
+
+
+% declare headmatter properties
+\Configure{JekyllDeclare}{language}{\jekyll@printstring}{\GetLanguage}
+\Configure{JekyllDeclare}{style}{\jekyll@printstring}{\jobname.css}
+\Configure{JekyllDeclare}{layout}{\jekyll@printstring}{\a:JekyllLayout}
+\Configure{JekyllDeclare}{template}{\jekyll@printstring}{\a:JekyllLayout}
+\Configure{JekyllDeclare}{title}{\jekyll@printstring}{\@title}
+
+% declare configurable post properties
+\NewConfigure{JekyllLayout}{1}
+\Configure{JekyllLayout}{post}
+
+% declare used properties depending on used site generator. default is `jekyll`
+
+\Configure{HeadmatterProperties}{title,style,layout,language}
+
+% lettersmith is site generator for Lua
+\:CheckOption{lettersmith}\if:Option
+\Configure{HeadmatterProperties}{title,style,template,language}
+\fi
+
+
+% in the draft mode, print the html head as usual
+
+\:CheckOption{draft}\if:Option\else
+% strip out html head
 \Configure{PROLOG}{}
 \Configure{@HEAD}{}
 \Configure{HEAD}{}{}
 \Configure{TITLE}{}{}
 \Configure{TITLE+}{}{}
 \Configure{HTML}{}{}
+
+% configure BODY to print headmatter
 \Configure{BODY}{%
 \bgroup%
 \HtmlParOff
 \def\\{\HCode{\Hnewline}}%
-\HCode{---}\\%
-\GetLayout%
-\GetTitle%
-\GetLanguage%
-\GetStyle%
-\GetAbstract\\%
-\yamltoks%
-\HCode{---}\\
+\a:headmatter
+\jekyll:headmatter:properties%
+\b:headmatter
 \HtmlParOn
 \egroup}{%
 \EndP
-% copied from html4.4ht
-\:CheckOption{fn-in} \if:Option
-\ifvmode \IgnorePar\fi\EndP
-\ifvoid \fn:box\else
-   \HCode{<div class="footnotes">}\box\fn:box\HCode{</div>}
-   \IgnorePar\EndP
-\fi
-\fi
+% copied from html4.4ht, print inline footnotes
+\:CheckOption{fn-in}\if:Option%
+  \ifvmode \IgnorePar\fi\EndP%
+  \ifvoid \fn:box\else%
+    \HCode{<div class="footnotes">}\box\fn:box\HCode{</div>}%
+    \IgnorePar\EndP%
+  \fi
 \fi
 }
-%\Configure{footnotemark}{\NoFonts\Link{fn\FNnum-fw}{fn\FNnum-bk}}{\EndLink\EndNoFonts}
-%\Configure{footnotetext}{\NoFonts\HCode{<span class="footnote">\Hnewline}\Link{fn\FNnum-bk}{fn\FNnum-fw}}{\EndLink\EndNoFonts}{\HCode{</span>}}
 
-
+\fi % end of draft checking
