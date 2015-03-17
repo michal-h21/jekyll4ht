@@ -1,5 +1,5 @@
 \ProvidesPackage{jekyll}
-\RequirePackage{etoolbox,environ}
+\RequirePackage{etoolbox}
 
 % We must set \textwidth to a big value, otherwise we can get unwanted linebreaks, 
 % resulting in invalid yaml header
@@ -14,41 +14,7 @@
   #2
 }
 
-% This isn't used at all
-%\newtoks\yamltoks
-% \gdef\yamltoks{}
-% \newcommand\AddToHeader[1]{%
-% \gdef\yamltoks{#1\\}
-% }
-\newcommand\SetLayout[1]{%
-\gdef\jekyll@layout{#1}
-}
-
-\gdef\LayoutString{layout}
-\newcommand\GetLayout{%
-%layout: \jekyll@layout\\%
-\jekyll@printstring\LayoutString\jekyll@layout
-}
-
-\gdef\TitleString{title}
-\newcommand\GetTitle{%
-%title: \@title\\%
-\jekyll@printstring{title}\@title
-}
-
-\gdef\LanguageString{language}
-\newcommand\GetLanguage{%
-\ifx\bbl@main@language\@undefined 
-\else
-%language: \bbl@main@language\\%
-\jekyll@printstring\LanguageString\bbl@main@language
-}
-
-\gdef\StyleString{style}
-\newcommand\GetStyle{%
-%style: \jobname.css\\%
-\jekyll@printstring\StyleString{\jobname.css}%
-}
+% abstract is not working anyway. it might be better to use `abstract` environment in the document
 \newtoks\my@Abstract
 \newcommand\Abstract[1]{\my@Abstract{#1}}
 
@@ -62,5 +28,3 @@
 \jekyl@printarray\AbstractString{\the\my@abstract}
 %\fi
 }
-\SetLayout{post}
-%\AddToHeader{title=\@title}
