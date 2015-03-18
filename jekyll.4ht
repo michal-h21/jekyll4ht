@@ -27,18 +27,24 @@
 \Configure{JekyllDeclare}{layout}{\jekyll@printstring}{\a:JekyllLayout}
 \Configure{JekyllDeclare}{template}{\jekyll@printstring}{\a:JekyllLayout}
 \Configure{JekyllDeclare}{title}{\jekyll@printstring}{\@title}
+\Configure{JekyllDeclare}{date}{\jekyll@printstring}{\a:JekyllDate}
 
 % declare configurable post properties
 \NewConfigure{JekyllLayout}{1}
 \Configure{JekyllLayout}{post}
 
+% print date in the iso format
+\NewConfigure{JekyllDate}{1}
+\def\jekyll@zeropad#1{\ifnum #1<10\relax0\fi#1}
+\Configure{JekyllDate}{\the\year-\jekyll@zeropad{\the\month}-\jekyll@zeropad{\the\day}}
+
 % declare used properties depending on used site generator. default is `jekyll`
 
-\Configure{HeadmatterProperties}{title,style,layout,language}
+\Configure{HeadmatterProperties}{title,style,layout,language,date}
 
 % lettersmith is site generator for Lua
 \:CheckOption{lettersmith}\if:Option
-\Configure{HeadmatterProperties}{title,style,template,language}
+\Configure{HeadmatterProperties}{title,style,template,language,date}
 \fi
 
 
