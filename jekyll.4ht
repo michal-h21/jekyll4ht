@@ -22,13 +22,13 @@
 
 
 % declare headmatter properties
-\Configure{JekyllDeclare}{language}{\jekyll@printstring}{\GetLanguage}
-\Configure{JekyllDeclare}{style}{\jekyll@printstring}{\jobname.css}
-\Configure{JekyllDeclare}{layout}{\jekyll@printstring}{\a:JekyllLayout}
-\Configure{JekyllDeclare}{template}{\jekyll@printstring}{\a:JekyllLayout}
-\Configure{JekyllDeclare}{title}{\jekyll@printstring}{\@title}
-\Configure{JekyllDeclare}{date}{\jekyll@printstring}{\a:JekyllDate}
-\Configure{JekyllDeclare}{author}{\jekyll@printstring}{\@author}
+\Configure{JekyllDeclare}{language}{\JekyllPrintString}{\GetLanguage}
+\Configure{JekyllDeclare}{style}{\JekyllPrintString}{\jobname.css}
+\Configure{JekyllDeclare}{layout}{\JekyllPrintString}{\a:JekyllLayout}
+\Configure{JekyllDeclare}{template}{\JekyllPrintString}{\a:JekyllLayout}
+\Configure{JekyllDeclare}{title}{\JekyllPrintString}{\@title}
+\Configure{JekyllDeclare}{date}{\JekyllPrintString}{\a:JekyllDate}
+\Configure{JekyllDeclare}{author}{\JekyllPrintString}{\@author}
 % declare configurable post properties
 \NewConfigure{JekyllLayout}{1}
 \Configure{JekyllLayout}{post}
