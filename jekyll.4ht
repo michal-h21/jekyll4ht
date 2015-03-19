@@ -8,9 +8,9 @@
 % declare headmatter property
 % #1 name, #2 function to print it #3 function to get it
 \NewConfigure{JekyllDeclare}[3]{%
-	\NewConfigure{Jekyll#1}{1}
-	\Configure{Jekyll#1}{#3}
-	\csgdef{jekyll:dec:#1}{#2{#1}{\csuse{a:Jekyll#1}}}%
+	\NewConfigure{Jekyll.#1}{1}
+	\Configure{Jekyll.#1}{#3}
+	\csgdef{jekyll:dec:#1}{#2{#1}{\csuse{a:Jekyll.#1}}}%
 }
 
 % declare which properties should be used
