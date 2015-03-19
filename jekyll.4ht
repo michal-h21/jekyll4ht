@@ -36,7 +36,7 @@
 \def\jekyll@zeropad#1{\ifnum #1<10\relax0\fi#1}
 \def\JekyllIsoDate{\the\year-\jekyll@zeropad{\the\month}-\jekyll@zeropad{\the\day}}
 
-\def\AddHeadProperty#1{\edef\a:HeadmatterProperties{\a:HeadmatterProperties,#1}}
+\NewConfigure{JekyllAddProperty}[1]{\edef\a:HeadmatterProperties{\a:HeadmatterProperties,#1}}
 % declare used properties depending on used site generator. default is `jekyll`
 
 \Configure{HeadmatterProperties}{title,style,layout,language,date,author}
