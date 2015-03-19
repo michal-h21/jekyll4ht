@@ -28,7 +28,7 @@
 \Configure{JekyllDeclare}{template}{\jekyll@printstring}{\a:JekyllLayout}
 \Configure{JekyllDeclare}{title}{\jekyll@printstring}{\@title}
 \Configure{JekyllDeclare}{date}{\jekyll@printstring}{\a:JekyllDate}
-
+\Configure{JekyllDeclare}{author}{\jekyll@printstring}{\@author}
 % declare configurable post properties
 \NewConfigure{JekyllLayout}{1}
 \Configure{JekyllLayout}{post}
@@ -40,11 +40,11 @@
 
 % declare used properties depending on used site generator. default is `jekyll`
 
-\Configure{HeadmatterProperties}{title,style,layout,language,date}
+\Configure{HeadmatterProperties}{title,style,layout,language,date,author}
 
 % lettersmith is site generator for Lua
 \:CheckOption{lettersmith}\if:Option
-\Configure{HeadmatterProperties}{title,style,template,language,date}
+\Configure{HeadmatterProperties}{title,style,template,language,date,author}
 \fi
 
 
@@ -80,4 +80,8 @@
 \fi
 }
 
+% you should construct maketitle in your static site's template, all needed 
+% variables are saved in the frontmatter
+
+\let\maketitle\relax
 \fi % end of draft checking
