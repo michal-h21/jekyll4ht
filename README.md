@@ -54,4 +54,26 @@ Example: `hello.cfg`:
     \begin{document}%
     \EndPreamble%
 
-(note that `%` after `\begin{document}` is important, you would get trailing space otherwise, resulting in invalid YAML frontmatter)
+(note that `%` after `\begin{document}` is important, you would get trailing
+space otherwise, resulting in invalid YAML frontmatter)
+
+`\Configure{JekyllDeclare}` takes three parameters: property name, print
+function and default value, which may be string, or command. Only string
+function available is `\JekyllPrintString` at the moment, but in the future
+more functions may be added, for blocks or arrays, for example.
+
+Resulting HTML:
+
+    --- 
+    title: Hello world 
+    style: sample.css 
+    layout: post 
+    language: cs-CZ 
+    date: 2015-03-16 
+    author:  
+    hello: world 
+    --- 
+    Hello world from <span class="obeylines-h"><span class="verb"><span 
+    class="ectt-1000">Jekyll4ht</span></span></span>
+    
+    
