@@ -1,23 +1,51 @@
 #!/usr/bin/env texlua
-kpse.set_program_name "luatex"
-local make4ht  = require "make4ht-lib"
-local mkparams = require "mkparams"
-local commands = require "jekyll-commands"
-local config   = require "jekyll-config"
-local options  = {}
-options.progname = "jekyll4ht"
-options.postparams = [[
-<command> (string)
-possible commands:
-  new - create new post
-]]
+kpse.set_program_name("luatex")
+
+
+local make4ht = require("make4ht-lib")
+local lapp    = require("lapp-mk4")
+local mkutils = require("mkutils")
+local mkparams = require("mkparams")
+-- args string is here just as sample, we dont pass it it to 
+-- mkparams.get_args() so default args string is used
+
+local options = {progname = "jekyll4ht"}
 local args = mkparams.get_args(options)
-for k,v in pairs(args) do
-	if type(v) == "string" then v = v else v = type(v) end
-	print (k..": "..v)
+
+local parameters = mkparams.process_args(args) 
+
+local mode = parameters.mode
+local build_file = parameters.build_file 
+
+local make = mkutils.load_config(parameters, build_file)["Make"]
+make.params = parameters
+if make:length() < 1 then
+	if mode == "draft" then
+		make:htlatex()
+	else
+		make:htlatex()
+		make:htlatex()
+		make:htlatex()
+	end
 end
-print(commands.get_commands()) 
-print(commands.find_command(arg))
-local cfg = config.find_config()
-print(cfg)
-local k = config.load_config(cfg)
+
+
+if not args["no-tex4ht"] then
+  make:tex4ht()
+end
+
+local ext = args.xetex and "xdv" or "dvi"
+if #make.image_patterns > 0 then
+  make.params.t4ht_par = make.params.t4ht_par .. " -p"
+end
+make:t4ht {ext = ext}
+make:match("tmp$", function() return false,"tmp file" end)
+make:match(".*",function(filename,par)
+	local outdir =  '' --par["outdir"] and par["outdir"] .."/" or ''
+	if par['outdir'] ~= "" then outdir = par['outdir'] .. '/' end
+	print("outdir: "..outdir)
+	local outfilename = outdir .. filename
+	mkutils.copy(filename,outfilename)
+	return true
+end)
+make:run()
