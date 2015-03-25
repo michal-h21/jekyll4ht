@@ -14,6 +14,9 @@ local args = mkparams.get_args(options)
 
 local parameters = mkparams.process_args(args) 
 
+
+-- add to tex4ht_sty_par: imgdir:adresar so obrazky,mod
+-- Make:htlatex {packages = '\\RequirePackage{jekyll}'}
 local mode = parameters.mode
 local build_file = parameters.build_file 
 
