@@ -7,17 +7,21 @@ function file_exists(name)
 end
 
 
+local make_name = function(name)
+  return name:gsub("//","/")
+end
+
 local xdg_config  = function(filename)
-  local xdg = os.getenv("XDG_CONFIG_DIR")
+  local xdg = os.getenv("XDG_CONFIG_HOME")
   local home = os.getenv("HOME")
   if xdg then
-    local fn = xdg .. "/jekyll4ht/".. filename
+    local fn = make_name(xdg .. "/jekyll4ht/".. filename)
     if file_exists(fn) then
       return fn
     end
   end
   if home then
-    local fn = home .."/"..filename
+    local fn = make_name(home .."/"..filename)
     if file_exists(fn) then
       return fn
     end
@@ -38,6 +42,23 @@ local find_config = function(filename)
 	return false
 end
 
+local function load_config(filename, default)
+  local default = default or {}
+  default.table = table
+  default.string = string
+  default.io = io
+  default.os = os
+  default.math = math
+  default.print = print
+  default.ipairs = ipairs
+  default.pairs = pairs
+  local f = io.open(filename, "r")
+  local contents = f:read("*all")
+  f:close()
+  load(contents,"sandbox config","bt", default)()
+  return default
+end
+
 --[[
 local function load_config(filename, default)
 	local default = default or {}
@@ -56,5 +77,5 @@ end
 
 m.find_config     = find_config
 m.find_xdg_config = xdg_config
-m.load_config     = lip.load
+m.load_config     = load_config
 return m
