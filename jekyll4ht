@@ -2,9 +2,9 @@
 kpse.set_program_name("luatex")
 
 
-local make4ht = require("make4ht-lib")
-local lapp    = require("lapp-mk4")
-local mkutils = require("mkutils")
+local make4ht  = require("make4ht-lib")
+local lapp     = require("lapp-mk4")
+local mkutils  = require("mkutils")
 local mkparams = require("mkparams")
 -- args string is here just as sample, we dont pass it it to 
 -- mkparams.get_args() so default args string is used
@@ -23,15 +23,28 @@ local mode = parameters.mode
 local build_file = parameters.build_file 
 
 local make = mkutils.load_config(parameters, build_file)["Make"]
+
+-- draft mode is special. no YAML header is created and files aren't copied to 
+-- the output destination
+
+if mode ~= "draft" then
+  parameters.packages = parameters.packages .. '\\RequirePackage{jekyll}' 
+end
+
 make.params = parameters
+for k, v in pairs(parameters) do
+  print("par",k,v)
+end
+
+
 if make:length() < 1 then
-	if mode == "draft" then
-		make:htlatex()
-	else
-		make:htlatex()
-		make:htlatex()
-		make:htlatex()
-	end
+  if mode == "draft" then
+    make:htlatex()
+  else
+    make:htlatex()
+    make:htlatex()
+    make:htlatex()
+  end
 end
 
 
@@ -44,13 +57,15 @@ if #make.image_patterns > 0 then
   make.params.t4ht_par = make.params.t4ht_par .. " -p"
 end
 make:t4ht {ext = ext}
-make:match("tmp$", function() return false,"tmp file" end)
-make:match(".*",function(filename,par)
-	local outdir =  '' --par["outdir"] and par["outdir"] .."/" or ''
-	if par['outdir'] ~= "" then outdir = par['outdir'] .. '/' end
-	print("outdir: "..outdir)
-	local outfilename = outdir .. filename
-	mkutils.copy(filename,outfilename)
-	return true
-end)
+if mode ~= "draft" then
+  make:match("tmp$", function() return false,"tmp file" end)
+  make:match(".*",function(filename,par)
+    local outdir =  '' --par["outdir"] and par["outdir"] .."/" or ''
+    if par['outdir'] ~= "" then outdir = par['outdir'] .. '/' end
+    print("outdir: "..outdir)
+    local outfilename = outdir .. filename
+    mkutils.copy(filename,outfilename)
+    return true
+  end)
+end
 make:run()
