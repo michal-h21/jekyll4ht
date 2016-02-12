@@ -17,6 +17,18 @@ local configname = ".jekyll4ht"
 local conffile = config.find_config(configname) or config.find_xdg_config(configname)
 local configuration = {}
 
+-- posts and css directories can be configured relative to the base dir, this function shoult handle it
+local function normalize_names(base, name)
+  -- if name starts with "./" then it will be handled as relative to the base dir
+  if name:match("^%./") then
+    local n = base .. name 
+    -- remove ./ and replace double slashes
+    return n:gsub("%./","/"):gsub("//","/")
+  end
+  -- if it isn't relative, return just name
+  return name
+end
+
 -- default configuration. use environment variables
 configuration.base = os.getenv("JEKYLL4HT_BASE")
 configuration.posts = os.getenv("JEKYLL4HT_POSTS") or "./_posts"
@@ -90,10 +102,19 @@ make:t4ht {ext = ext}
 
 -- we don't want to copy the files in the draft mode
 if mode ~= "draft" then
-  if not configuration.base then
+  local base = configuration.base
+  local posts = configuration.posts
+  local css = configuration.css
+  if not base then
     print "jekyll4ht error: base dir configuration not set"
     os.exit(1)
   end
+  make:match("css$", function(filename, par)
+    local cssdir = normalize_names(base, css) .. "/"
+    local cssfile = cssdir 
+    mkutils.copy(filename, cssfile)
+    return false
+  end)
   make:match("tmp$", function() return false,"tmp file" end)
   make:match(".*",function(filename,par)
     -- local outdir =  '' --par["outdir"] and par["outdir"] .."/" or ''
