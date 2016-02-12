@@ -67,6 +67,7 @@
 \jekyll:headmatter:properties%
 \b:headmatter
 \HtmlParOn
+\par\ShowPar
 \egroup}{%
 \EndP
 % copied from html4.4ht, print inline footnotes
