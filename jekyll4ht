@@ -7,6 +7,7 @@ local lapp     = require("lapp-mk4")
 local mkutils  = require("mkutils")
 local mkparams = require("mkparams")
 local config   = require("jekyll-config")
+local filter   = require("make4ht-filter")
 
 -- configuration handling
 -- config file is Lua file, it can be placed in current directory or its parents (at any level), or
@@ -33,6 +34,7 @@ end
 configuration.base = os.getenv("JEKYLL4HT_BASE")
 configuration.posts = os.getenv("JEKYLL4HT_POSTS") or "./_posts"
 configuration.css  = os.getenv("JEKYLL4HT_CSS") or "./css"
+configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${name}"
 
 if conffile then
   -- configuration table is used as environment for the config file
@@ -42,11 +44,11 @@ else
   print "jekyll4ht warning: no config file found"
 end
 
-for k,v in pairs(configuration) do
-  if type(v) == "string" then
-    print(k,v)
-  end
-end
+-- for k,v in pairs(configuration) do
+--   if type(v) == "string" then
+--     print(k,v)
+--   end
+-- end
 
 -- args string is here just as sample, we dont pass it it to 
 -- mkparams.get_args() so default args string is used
@@ -109,6 +111,9 @@ if mode ~= "draft" then
     print "jekyll4ht error: base dir configuration not set"
     os.exit(1)
   end
+  make:match("html$", function(filename, par)
+
+  end)
   make:match("css$", function(filename, par)
     local cssdir = normalize_names(base, css) .. "/"
     local cssfile = cssdir 
