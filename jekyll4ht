@@ -7,7 +7,6 @@ local lapp     = require("lapp-mk4")
 local mkutils  = require("mkutils")
 local mkparams = require("mkparams")
 local config   = require("jekyll-config")
-local filter   = require("make4ht-filter")
 
 -- configuration handling
 -- config file is Lua file, it can be placed in current directory or its parents (at any level), or
@@ -34,7 +33,7 @@ end
 configuration.base = os.getenv("JEKYLL4HT_BASE")
 configuration.posts = os.getenv("JEKYLL4HT_POSTS") or "./_posts"
 configuration.css  = os.getenv("JEKYLL4HT_CSS") or "./css"
-configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${name}"
+configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${slug}.html"
 
 if conffile then
   -- configuration table is used as environment for the config file
@@ -44,6 +43,39 @@ else
   print "jekyll4ht warning: no config file found"
 end
 
+local function trim_string(x)
+  return x:gsub("^%s*",""):gsub("%s*$","")
+end
+-- YAML header parse filter
+-- we want to parse some basic fields from the YAML header
+--
+-- 
+local function parseYAML(filename, fields)
+  local fields = fields or {}
+  -- open HTML file
+  local f = io.open(filename,"r")
+  local contents = f:read("*all")
+  f:close()
+  -- find the YAML header
+  local header = contents:match("%-%-%-(.-)%-%-%-") -- it probably isn't a good idea to use --- in title
+  if not header then 
+    print "jekyll4ht error: cannot find an YAML header in the HTML file"
+    return nil
+  end
+  local t = {}
+  for _, key in ipairs(fields) do
+    t[key] = trim_string(header:match(key.. "%s*:%s*([^\n]+)"))
+    -- print(key, t[key])
+  end
+  -- return also contents, they will be saved to the destination file
+  return t, contents
+end
+
+-- convert title to usable string: remove special characters, replace spaces with `-`
+local function to_slug(s)
+  return trim_string(s):gsub("[^%w%s-_]", ""):gsub("%s", "-"):lower()
+end
+--
 -- for k,v in pairs(configuration) do
 --   if type(v) == "string" then
 --     print(k,v)
@@ -107,12 +139,32 @@ if mode ~= "draft" then
   local base = configuration.base
   local posts = configuration.posts
   local css = configuration.css
+  local nametpl = configuration.nametpl
   if not base then
     print "jekyll4ht error: base dir configuration not set"
     os.exit(1)
   end
   make:match("html$", function(filename, par)
-
+    -- parse date and title from yaml header
+    local fields, contents = parseYAML(filename, {"date", "title"})
+    local date = os.date("%Y-%m-%d")
+    -- default new file name. it will be replaced if yaml properties were parsed
+    local newname = date .. "-" .. filename
+    if fields then
+      -- sanitize the title
+      fields.slug = to_slug(fields.title or "")
+      fields.name = par.input
+      -- fill name template with fields
+      newname = nametpl % fields
+    end
+    local htmldir = normalize_names(base, posts) .. "/"
+    local htmlfile =htmldir .. newname
+    print("Save the html file",htmlfile)
+    mkutils.cp(filename, htmlfile)
+    -- local f = io.open(htmlfile, "w")
+    -- f:write(contents)
+    -- f:close()
+    return false
   end)
   make:match("css$", function(filename, par)
     local cssdir = normalize_names(base, css) .. "/"
