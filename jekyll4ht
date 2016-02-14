@@ -33,7 +33,9 @@ end
 configuration.base = os.getenv("JEKYLL4HT_BASE")
 configuration.posts = os.getenv("JEKYLL4HT_POSTS") or "./_posts"
 configuration.css  = os.getenv("JEKYLL4HT_CSS") or "./css"
+configuration.img  = os.getenv("JEKYLL4HT_IMG") or "./img"
 configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${slug}.html"
+configuration.publish_mode = "publish"
 
 if conffile then
   -- configuration table is used as environment for the config file
@@ -42,6 +44,9 @@ if conffile then
 else
   print "jekyll4ht warning: no config file found"
 end
+
+-- files are published to site only in the publish mode
+local publish = configuration.publish_mode
 
 local function trim_string(x)
   return x:gsub("^%s*",""):gsub("%s*$","")
@@ -101,14 +106,13 @@ if not mkutils.file_exists(build_file) then
   -- if build file doesn\t exist, then use default build file, if it is configured
   build_file = configuration.build_file or build_file
 end
-print("build file", build_file)
 
 local make = mkutils.load_config(parameters, build_file)["Make"]
 
 -- draft mode is special. no YAML header is created and files aren't copied to 
 -- the output destination
 
-if mode ~= "draft" then
+if mode==publish then
   parameters.packages = parameters.packages .. '\\RequirePackage{jekyll}' 
 end
 
@@ -139,8 +143,8 @@ if #make.image_patterns > 0 then
 end
 make:t4ht {ext = ext}
 
--- we don't want to copy the files in the draft mode
-if mode ~= "draft" then
+-- handling of publish mode
+if mode==publish then
   local base = configuration.base
   local posts = configuration.posts
   local css = configuration.css
