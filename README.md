@@ -76,4 +76,10 @@ Resulting HTML:
     Hello world from <span class="obeylines-h"><span class="verb"><span 
     class="ectt-1000">Jekyll4ht</span></span></span>
     
+
+# `jekyll4ht` script
+
+Variant of [make4ht](https://www.ctan.org/pkg/make4ht?lang=en) command is provided. It can 
+automatically copy HTML, CSS and images to correct destinations in your static site project
+directory.
     
