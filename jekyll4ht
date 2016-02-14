@@ -97,6 +97,11 @@ local parameters = mkparams.process_args(args)
 -- usera dát cestu k css souboru do šablony
 local mode = parameters.mode
 local build_file = parameters.build_file 
+if not mkutils.file_exists(build_file) then
+  -- if build file doesn\t exist, then use default build file, if it is configured
+  build_file = configuration.build_file or build_file
+end
+print("build file", build_file)
 
 local make = mkutils.load_config(parameters, build_file)["Make"]
 
