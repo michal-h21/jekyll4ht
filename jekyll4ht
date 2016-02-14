@@ -36,6 +36,7 @@ configuration.css  = os.getenv("JEKYLL4HT_CSS") or "./css"
 configuration.img  = os.getenv("JEKYLL4HT_IMG") or "./img"
 configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${slug}.html"
 configuration.publish_mode = "publish"
+configuration.build_file = nil   -- don't use default build file
 
 if conffile then
   -- configuration table is used as environment for the config file
