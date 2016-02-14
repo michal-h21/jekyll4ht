@@ -36,6 +36,7 @@ configuration.css  = os.getenv("JEKYLL4HT_CSS") or "./css"
 configuration.img  = os.getenv("JEKYLL4HT_IMG") or "./img"
 configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${slug}.html"
 configuration.publish_mode = "publish"
+configuration.image_extensions = {"jpg","png","svg","gif"}
 configuration.build_file = nil   -- don't use default build file
 
 if conffile then
@@ -46,8 +47,19 @@ else
   print "jekyll4ht warning: no config file found"
 end
 
+----------------------
+-- use configuration -
+-- -------------------
 -- files are published to site only in the publish mode
 local publish = configuration.publish_mode
+
+-- make hash table from array with image extensions
+local image_extensions = {}
+configuration.image_extensions = configuration.image_extensions or {}
+for _, ext in ipairs(configuration.image_extensions) do
+  print("save ext", ext)
+  image_extensions[ext] = true
+end
 
 local function trim_string(x)
   return x:gsub("^%s*",""):gsub("%s*$","")
@@ -149,6 +161,7 @@ if mode==publish then
   local base = configuration.base
   local posts = configuration.posts
   local css = configuration.css
+  local img = configuration.img
   local nametpl = configuration.nametpl
   if not base then
     print "jekyll4ht error: base dir configuration not set"
@@ -183,6 +196,15 @@ if mode==publish then
     return false
   end)
   make:match("tmp$", function() return false,"tmp file" end)
+  make:match(".*", function(filename, par)
+    local ext = filename:match("%.([^%.]-)$")
+    if image_extensions[ext] then
+      print("extenson", ext)
+      local imgdir = normalize_names(base, img) .. "/"
+      mkutils.copy(filename, imgdir)
+      return false
+    end
+  end)
   make:match(".*",function(filename,par)
     -- local outdir =  '' --par["outdir"] and par["outdir"] .."/" or ''
     -- if par['outdir'] ~= "" then outdir = par['outdir'] .. '/' end
