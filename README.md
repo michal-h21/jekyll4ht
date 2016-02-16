@@ -106,16 +106,16 @@ directory, all of its parents, `$XDG_CONFIG_HOME/jekyll4ht/.jekyll4ht` and
 
 Possible structure of your static site could be:
 
-home
-  blog
-    root
-      _site
-      _posts
-      css
-      img
-    texfiles
-      .jekyll4ht
-      first_post
-        first_post.tex
-      second_post
-        second_post.tex
+    home
+      blog
+        root
+          _site
+          _posts
+          css
+          img
+        texfiles
+          .jekyll4ht
+          first_post
+            first_post.tex
+          second_post
+            second_post.tex
