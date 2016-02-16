@@ -58,7 +58,6 @@ local publish = configuration.publish_mode
 local image_extensions = {}
 configuration.image_extensions = configuration.image_extensions or {}
 for _, ext in ipairs(configuration.image_extensions) do
-  print("save ext", ext)
   image_extensions[ext] = true
 end
 
