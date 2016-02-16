@@ -12,7 +12,7 @@ local make_name = function(name)
 end
 
 local xdg_config  = function(filename)
-  local xdg = os.getenv("XDG_CONFIG_HOME")
+  local xdg = os.getenv("XDG_CONFIG_HOME") or ((os.getenv("HOME") or "") ..  "/.config")
   local home = os.getenv("HOME")
   if xdg then
     local fn = make_name(xdg .. "/jekyll4ht/".. filename)
