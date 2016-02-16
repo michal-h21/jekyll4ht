@@ -82,4 +82,40 @@ Resulting HTML:
 Variant of [make4ht](https://www.ctan.org/pkg/make4ht?lang=en) command is provided. It can 
 automatically copy HTML, CSS and images to correct destinations in your static site project
 directory.
-    
+
+The command is called `jekyll4ht`, the difference from `make4ht` is that it has
+special mode, `publish`. In this mode, `jekyll` package is included automatically and all 
+output files are copied to the correct locations in the static site (static site generator
+must be called manually). 
+
+## Configuration
+
+Because variety of static site generators are
+supported, configuration file can be used to specify the locations where output
+files should be put.
+
+You can use default configuration suitable for `Jekyll` generator, only `JEKYLL4HT_BASE` environment
+variable must be set. It should point to the root of your static site.
+
+    export JEKYLL4HT_BASE=~/myblog
+
+If you want to modify the configuration, the configuration file must be
+provided. It should be named `.jekyll4ht`. It is looked up in the current
+directory, all of its parents, `$XDG_CONFIG_HOME/jekyll4ht/.jekyll4ht` and
+`$HOME/.jekyll4ht`.
+
+Possible structure of your static site could be:
+
+home
+  blog
+    root
+      _site
+      _posts
+      css
+      img
+    texfiles
+      .jekyll4ht
+      first_post
+        first_post.tex
+      second_post
+        second_post.tex
