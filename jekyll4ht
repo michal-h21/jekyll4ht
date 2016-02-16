@@ -191,7 +191,7 @@ if mode==publish then
   end)
   make:match("css$", function(filename, par)
     local cssdir = normalize_names(base, css) .. "/"
-    local cssfile = cssdir 
+    local cssfile = cssdir  .. filename
     mkutils.copy(filename, cssfile)
     return false
   end)
@@ -201,7 +201,8 @@ if mode==publish then
     if image_extensions[ext] then
       print("extenson", ext)
       local imgdir = normalize_names(base, img) .. "/"
-      mkutils.copy(filename, imgdir)
+      local imgfile = imgdir .. filename
+      mkutils.copy(filename, imgfile)
       return false
     end
   end)
