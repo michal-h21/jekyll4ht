@@ -3,8 +3,9 @@ project = jekyll4ht
 lua_content = $(project) $(wildcard *.lua)
 doc_file = ${project}-doc.pdf
 TEXMFHOME = $(shell kpsewhich -var-value=TEXMFHOME)
-INSTALL_DIR = $(TEXMFHOME)/scripts/lua/${project}
+TEX_DIR = $(TEXMFHOME)/tex/latex/$(project)
 LUA_DIR = $(TEXMFHOME)/scripts/lua/${project}
+INSTALL_DIR = $(LUA_DIR)
 MANUAL_DIR = $(TEXMFHOME)/doc/latex/${project}
 SYSTEM_DIR = /usr/local/bin
 BUILD_DIR = build
@@ -26,15 +27,15 @@ changelog.tex: CHANGELOG.md
 build: doc $(tex_content) $(lua_content)
 	@rm -rf build
 	@mkdir -p $(BUILD_TEX4EBOOK)
-	@cp $(tex_content) $(lua_content)  ${project}-doc.pdf $(BUILD_TEX4EBOOK)
+	@cp $(tex_content) $(lua_content)  $(doc_file) $(BUILD_TEX4EBOOK)
 	@cp README.md $(BUILD_TEX4EBOOK)README
 	cd $(BUILD_DIR) && zip -r ${project}.zip ${project}
 
 install: doc $(tex_content) $(lua_content)
-	mkdir -p $(INSTALL_DIR)
+	mkdir -p $(TEX_DIR)
 	mkdir -p $(MANUAL_DIR)
 	mkdir -p $(LUA_DIR)
-	cp $(tex_content) $(INSTALL_DIR)
+	cp $(tex_content) $(TEX_DIR)
 	cp $(lua_content) $(LUA_DIR)
 	cp $(doc_file) $(MANUAL_DIR)
 	chmod +x $(INSTALL_DIR)/${project}
