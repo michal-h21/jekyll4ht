@@ -1,9 +1,0 @@
-local mkutils = require "mkutils"
-local outdir = "outputdir/"
-
-Make:htlatex {packages = '\\RequirePackage{jekyll}'}
-
-Make:match(".html$", function(file, par)
-	mkutils.copy(file, outdir .. file)
-	return false, "Copy html to destination "..outdir
-end)
