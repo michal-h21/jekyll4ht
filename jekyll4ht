@@ -8,6 +8,7 @@ local mkutils  = require("mkutils")
 local mkparams = require("mkparams")
 local config   = require("jekyll-config")
 local filter = require("make4ht-filter")
+local removeaccents = require("jekyll-removeaccents")
 
 -- configuration handling
 -- config file is Lua file, it can be placed in current directory or its parents (at any level), or
@@ -91,6 +92,7 @@ end
 
 -- convert title to usable string: remove special characters, replace spaces with `-`
 local function to_slug(s)
+  local s = removeaccents.strip_accents(s)
   return trim_string(s):gsub("[^%w%s-_]", ""):gsub("%s", "-"):lower()
 end
 
