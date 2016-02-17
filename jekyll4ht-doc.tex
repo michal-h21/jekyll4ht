@@ -1,0 +1,24 @@
+\documentclass{article}
+
+
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\ifdefined\HCode
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\else
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Schola}
+\fi
+\usepackage{microtype}
+
+\title{The \texttt{jekyll4ht} package}
+\author{Michal Hoftich\footnote{\url{michal.h21@gmail.com}}}
+\date{Version 0.1\\17/02/2016}
+\begin{document}
+\maketitle
+\tableofcontents
+\input{readme}
+
+\input{changelog}
+\end{document}
