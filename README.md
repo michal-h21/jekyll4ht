@@ -102,11 +102,12 @@ variable must be set. It should point to the root of your static site.
 If you want to modify the configuration, the configuration file must be
 provided. It should be named `.jekyll4ht`. It is looked up in the current
 directory, all of its parents, `$XDG_CONFIG_HOME/jekyll4ht/.jekyll4ht` and
-`$HOME/.jekyll4ht`.
+`$HOME/.jekyll4ht`. This enables you to have multiple static sites in your
+computer.
 
 Possible structure of your static site could be:
 
-    home
+    $HOME
       blog
         root
           _site
@@ -119,3 +120,18 @@ Possible structure of your static site could be:
             first_post.tex
           second_post
             second_post.tex
+
+
+In this example, two directories are set up in the `blog` directory, `root`
+where `jekyll` project is placed and `texfiles` with TeX source codes of the
+posts. Particular posts are placed in subdirectories, they share configuration
+file `.jekyll4ht` in the `texfiles` directory.
+
+It's minimal contents may look this way:
+
+    base = "~/blog/root/"
+
+A configuration file is sandboxed LUA code, configuration values are saved in
+global variables (without `local` keyword)
+
+Besides `base` for path to the 
