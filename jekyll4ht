@@ -39,6 +39,8 @@ configuration.img  = os.getenv("JEKYLL4HT_IMG") or "./img"
 configuration.nametpl = os.getenv("JEKYLL4HT_NAMETPL") or "${date}-${slug}.html"
 configuration.publish_mode = "publish"
 configuration.image_extensions = {"jpg","png","svg","gif"}
+configuration.excerpt_pattern = '([%a%s%<%>%/]+</p>)'
+configuration.excerpt_separator = "\n<!--more-->\n"
 configuration.build_file = nil   -- don't use default build file
 
 if conffile then
@@ -110,6 +112,23 @@ local function imgparser(doc)
   end)
 end
 --
+-- mark excerpt
+local function excerpt(doc)
+  print("Insert excerpt")
+  local first = true
+  local excerpt_separator = configuration.excerpt_separator
+  -- cancel inserting the separator if it is nil or false
+  if not excerpt_separator then return doc end
+  local excerpt_pattern = configuration.excerpt_pattern 
+  return doc:gsub(excerpt_pattern, function(a)
+    if first then
+      print("Inserting excerpt: ", a)
+      first = false
+      return a .. excerpt_separator 
+    end
+    return a
+  end)
+end
 -- for k,v in pairs(configuration) do
 --   if type(v) == "string" then
 --     print(k,v)
@@ -144,7 +163,7 @@ local make = mkutils.load_config(parameters, build_file)["Make"]
 if mode==publish then
   parameters.packages = parameters.packages .. '\\RequirePackage{jekyll}' 
 end
-
+ 
 make.params = parameters
 for k, v in pairs(parameters) do
   print("par",k,v)
@@ -185,7 +204,7 @@ if mode==publish then
   end
   -- fix issues in the HTML file
   -- add correct dir to the img src attribute
-  local htmlprocess = filter{ imgparser }
+  local htmlprocess = filter{ imgparser, excerpt }
   make:match("html$", htmlprocess)
   make:match("html$", function(filename, par)
     -- parse date and title from yaml header
