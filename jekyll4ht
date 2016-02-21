@@ -132,6 +132,35 @@ local function excerpt(doc)
     return a
   end)
 end
+
+local function make_name(filename, par)
+  -- save generated filename first time the post is published, it will be reused later
+  local published = par.input .. ".published" 
+  local newname
+  if mkutils.file_exists(published) then
+    local f = io.open(published, "r")
+    newname = f:read("*line")
+    print("Read published filename", newname)
+    f:close()
+  else
+    -- parse date and title from yaml header
+    local fields, contents = parseYAML(filename, {"date", "title"})
+    local date = os.date("%Y-%m-%d")
+    -- default new file name. it will be replaced if yaml properties were parsed
+    newname = date .. "-" .. filename
+    if fields then
+      -- sanitize the title
+      fields.slug = to_slug(fields.title or "")
+      fields.name = par.input
+      -- fill name template with fields
+      newname = nametpl % fields
+    end
+    local f = io.open(published, "w")
+    f:write(newname)
+    f:close()
+  end
+  return newname
+end
 -- for k,v in pairs(configuration) do
 --   if type(v) == "string" then
 --     print(k,v)
@@ -210,31 +239,7 @@ if mode==publish then
   local htmlprocess = filter{ imgparser, excerpt }
   make:match("html$", htmlprocess)
   make:match("html$", function(filename, par)
-    -- save generated filename first time the post is published, it will be reused later
-    local published = par.input .. ".published" 
-    local newname
-    if mkutils.file_exists(published) then
-      local f = io.open(published, "r")
-      newname = f:read("*line")
-      print("Read published filename", newname)
-      f:close()
-    else
-      -- parse date and title from yaml header
-      local fields, contents = parseYAML(filename, {"date", "title"})
-      local date = os.date("%Y-%m-%d")
-      -- default new file name. it will be replaced if yaml properties were parsed
-      newname = date .. "-" .. filename
-      if fields then
-        -- sanitize the title
-        fields.slug = to_slug(fields.title or "")
-        fields.name = par.input
-        -- fill name template with fields
-        newname = nametpl % fields
-      end
-      local f = io.open(published, "w")
-      f:write(newname)
-      f:close()
-    end
+    local newname = make_name(filename, par)
     local htmldir = normalize_names(base, posts) .. "/"
     local htmlfile =htmldir .. newname
     print("Save the html file",htmlfile)
