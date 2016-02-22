@@ -135,6 +135,7 @@ end
 
 local function make_name(filename, par)
   -- save generated filename first time the post is published, it will be reused later
+  local nametpl = configuration.nametpl
   local published = par.input .. ".published" 
   local newname
   if mkutils.file_exists(published) then
@@ -229,7 +230,6 @@ if mode==publish then
   local posts = configuration.posts
   local css = configuration.css
   local img = configuration.img
-  local nametpl = configuration.nametpl
   if not base then
     print "jekyll4ht error: base dir configuration not set"
     os.exit(1)
