@@ -114,7 +114,30 @@ global variables (without `local` keyword)
 `${var-name}`. Default value save the file with published date and sanitized
 title. Original file name is available as `${input}`.
 
-# `jekyll` package
+### Images
+
+Image files must be copied to the `img` dir and all links to these files must
+be fixed in the HTML. `image_extensions` specifies image extensions to be
+handled.
+
+### Excerpts
+
+It is possible to insert special mark in the HTML file to specify the excerpt.
+Excerpt is part of document shown in the article list or in the RSS feed.
+
+`excerpt_pattern` specifies regular expression which matches text after which
+`excerpt_separator` is inserted. The `excerpt_pattern` may match multiple
+matches, you can specify after which one the separator should be inserted with
+`excerpt_count`.  # `jekyll` package
+
+If you don't want to use excerpts or if you wan't to handle it yourself in a
+custom build file, set `excerpt_separator` as `nil`.
+
+### Build file
+
+You can specify default [make4ht build file](https://github.com/michal-h21/make4ht#build-files)
+with `build_file`.
+
 ## Example document:
 
     \documentclass{article}
