@@ -1,6 +1,3 @@
-the `jekyll4ht` package and script
-==================================
-
 This package simplifies creation of html files suitable for static site
 generators, such as [Jekyll](http://jekyllrb.com/),
 [Middleman](https://middlemanapp.com/) or
@@ -130,13 +127,20 @@ Excerpt is part of document shown in the article list or in the RSS feed.
 matches, you can specify after which one the separator should be inserted with
 `excerpt_count`.  # `jekyll` package
 
-If you don't want to use excerpts or if you wan't to handle it yourself in a
+If you don't want to use excerpts or if you want to handle it yourself in a
 custom build file, set `excerpt_separator` as `nil`.
 
 ### Build file
 
 You can specify default [make4ht build file](https://github.com/michal-h21/make4ht#build-files)
 with `build_file`.
+
+# `jekyll` package
+
+It is not necessary to use `jekyll` package directly in your
+document if you use `jekyll4ht` command, as it is included automatically when
+the finished document is published. It is included in this example only to
+illustrate the YAML configuration.
 
 ## Example document:
 
@@ -163,13 +167,11 @@ produces:
     Hello world from <span class="obeylines-h"><span class="verb"><span 
     class="ectt-1000">Jekyll4ht</span></span></span>
 
-Please note that it is not necessary to use `jekyll` package directly in your
-document if you use `jekyll4ht` package, as it is included automaticaly when
-the finished document is published. It is included in this example only to
-illustrate the YAML configuration.
+
+## Configuration
 
 The metadata block is enclosed in `---` ... `---` section. Metadata are derived
-automaticaly, although you can add new properties or change default values.
+automatically, although you can add new properties or change default values.
 Each property is configurable using `\Configure{Jekyll.propertyname}{new
 value}` in the `.cfg` file.
 
