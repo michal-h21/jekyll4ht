@@ -21,10 +21,25 @@ directory.
 
 The command is called `jekyll4ht`, the difference from `make4ht` is that it has
 special mode, `publish`. In this mode, `jekyll` package is included automatically and all 
-output files are copied to the correct locations in the static site (static site generator
-must be called manually). 
+output files are copied to the correct locations in the static site (static
+site generator must be called manually).  The command options are the same as
+of `make4ht`. 
 
-When compiled with
+Command 
+
+    jekyll4ht -uc sample.cfg filename
+
+will create complete HTML document in the current directory
+
+    jekyll4ht -uc sample.cfg -m publish filename
+
+will create HTML file with YAML header and it will save it as
+`YYYY-MM-DD-document-title.html` in the `posts` directory. All included and and
+generated images will be saved in the `img` directory.
+
+Generated filename is saved in `$input.published` file, it will be reused in
+future compilations. If you want to change the post date, delete the generated
+file in the static site and `$input.published`.
 
 ## Configuration
 
@@ -72,10 +87,35 @@ It's minimal contents may look this way:
 A configuration file is sandboxed LUA code, configuration values are saved in
 global variables (without `local` keyword)
 
-Besides `base` for path to the 
+## Variables
 
-## `jekyll` package
-### Example document:
+
+    base = "" 
+    posts = "./_posts"
+    css  =  "./css"
+    img  =  "./img"
+    nametpl =  "${date}-${slug}.html"
+    publish_mode = "publish"
+    image_extensions = {"jpg","png","svg","gif"}
+    excerpt_count = 1
+    excerpt_pattern = '([%a%s%<%>%/]+</p>)'
+    excerpt_separator = "\n<!--more-->\n"
+    build_file = nil   -- don't use default build file
+
+### Directories
+
+`posts`, `css` and `img` directories should be specified relatively to the `base` dir. The default values should work for `Jekyll`.
+
+### Publishing
+
+`publish_mode` specifies `mode` option used for publishing.
+
+`nametpl` can be used to change the post name, variables are specified as
+`${var-name}`. Default value save the file with published date and sanitized
+title. Original file name is available as `${input}`.
+
+# `jekyll` package
+## Example document:
 
     \documentclass{article}
     \usepackage{jekyll}
