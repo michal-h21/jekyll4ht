@@ -1,3 +1,6 @@
+Notice: this proceject is obsolete. The same functionality is provided by the `staticsite` extension for [make4ht](https://ctan.org/pkg/make4ht?lang=en). See this [answer](https://tex.stackexchange.com/a/506587/2891) for example.
+----
+
 This package simplifies creation of html files suitable for static site
 generators, such as [Jekyll](http://jekyllrb.com/),
 [Middleman](https://middlemanapp.com/) or
